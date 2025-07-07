@@ -1,9 +1,27 @@
 # Projeto 
 
-- Estrutura Terraform que provisiona localmente duas VMs usando KVM/libvirt, conectadas a uma rede virtual com DHCP, em que:
-- Uma VM atua como servidor DHCP
-- Outra como cliente DHCP
-- Um roteador/gateway opcional pode ser configurado (simples forwarding + NAT)
+Este projeto implementa uma infraestrutura virtual automatizada utilizando ```Terraform```, ```Libvirt/KVM``` e ```Cloud-Init```. O objetivo é criar um ambiente com duas máquinas virtuais que simulam uma comunicação em rede via ```DHCP```, demonstrando conceitos de ```Infraestrutura como Código (IaC)``` e provisionamento local.
+
+# Componentes Principais
+**Terraform:** Ferramenta principal para orquestração da infraestrutura (discos, rede, VMs).\
+**Libvirt/KVM:** Hipervisor utilizado para virtualização local.\
+**Cloud-Init:** Utilizado para configuração automatizada do sistema nas VMs durante o boot inicial.
+
+# Máquinas Virtuais Criadas
+**dhcp-server**\
+**IP estático:** ```10.0.0.2 ```\
+**Serviço:** ```isc-dhcp-server```\
+Distribui IPs de ```10.0.0.10 a 10.0.0.15```\
+Scripts automatizados para instalação e configuração
+
+# dhcp-client
+Recebe IP via DHCP (cliente)\
+Interface configurada automaticamente com ```dhclient```
+
+# Rede Virtual
+**Nome:** ```gateway```\
+**Modo:** NAT ```(virbr1)```\
+**IP do gateway:** ```10.0.0.1/24```
   
 # Pre-requisitos
 
