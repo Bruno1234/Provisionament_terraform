@@ -3,8 +3,8 @@
 Este projeto implementa uma infraestrutura virtual automatizada utilizando ```Terraform```, ```Libvirt/KVM``` e ```Cloud-Init```. O objetivo é criar um ambiente com duas máquinas virtuais que simulam uma comunicação em rede via ```DHCP```, demonstrando conceitos de ```Infraestrutura como Código (IaC)``` e provisionamento local.
 
 # Componentes Principais
-  -  Terraform: Ferramenta principal para orquestração da infraestrutura     (discos, rede, VMs).\  
-  -  Libvirt/KVM: Hipervisor utilizado para virtualização local.\
+  -  Terraform: Ferramenta principal para orquestração da infraestrutura (discos, rede, VMs).
+  -  Libvirt/KVM: Hipervisor utilizado para virtualização local.
   -  Cloud-Init: Utilizado para configuração automatizada do sistema nas   VMs durante o boot inicial.
 
 # Máquinas Virtuais Criadas 
@@ -16,7 +16,7 @@ Este projeto implementa uma infraestrutura virtual automatizada utilizando ```Te
   - Scripts automatizados para instalação e configuração
 
 **dhcp-client**
- - Recebe IP via DHCP (cliente)\
+ - Recebe IP via DHCP (cliente)
  - Interface configurada automaticamente com ```dhclient```
 
 # Rede Virtual
