@@ -1,0 +1,89 @@
+#cloud-config
+network: {config: disabled}
+
+hostname: dhcp-server
+users:
+  - name: aluno
+    plain_text_passwd: "1234"
+    lock_passwd: false
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+
+write_files:
+  - path: /etc/netplan/01-static.yaml
+    permissions: '0644'
+    content: |
+      network:
+        version: 2
+        renderer: networkd
+        ethernets:
+          ens3:
+            dhcp4: false
+            addresses: [10.0.0.2/24]
+            gateway4: 10.0.0.1
+            nameservers:
+              addresses: [8.8.8.8, 1.1.1.1]
+
+  - path: /etc/dhcp/dhcpd.conf
+    permissions: '0644'
+    content: |
+      subnet 10.0.0.0 netmask 255.255.255.0 {
+        range 10.0.0.10 10.0.0.15;
+        option routers 10.0.0.2;
+        option domain-name-servers 8.8.8.8;
+        default-lease-time 600;
+        max-lease-time 7200;
+      }
+
+  - path: /etc/default/isc-dhcp-server
+    permissions: '0644'
+    content: |
+      INTERFACESv4="ens3"
+      INTERFACESv6=""
+
+  - path: /usr/local/bin/installdhcp.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      apt-get update
+      apt-get install -y isc-dhcp-server net-tools
+      systemctl enable isc-dhcp-server
+      systemctl restart isc-dhcp-server
+      ufw disable
+      echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+      sysctl -p
+
+  - path: /usr/local/bin/installdhcpuser.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+
+      # Criar grupo dhcpd se não existir
+      if ! getent group dhcpd > /dev/null; then
+        echo "[+] Criando grupo dhcpd..."
+        groupadd --system dhcpd
+      else
+        echo "[=] Grupo dhcpd já existe."
+      fi
+
+      # Criar usuário dhcpd se não existir
+      if ! id dhcpd > /dev/null 2>&1; then
+        echo "[+] Criando usuário dhcpd..."
+        useradd --system --no-create-home --shell /usr/sbin/nologin --gid dhcpd dhcpd
+      else
+        echo "[=] Usuário dhcpd já existe."
+      fi
+
+      # Reiniciar o serviço
+      echo "[*] Reiniciando o serviço isc-dhcp-server..."
+      systemctl restart isc-dhcp-server
+
+      # Verificar status
+      echo "[*] Status atual do serviço:"
+      systemctl status isc-dhcp-server --no-pager
+
+runcmd:
+  - netplan apply
+  - bash /usr/local/bin/installdhcp.sh
+  - bash /usr/local/bin/installdhcpuser.sh
+
