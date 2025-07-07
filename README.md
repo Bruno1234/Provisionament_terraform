@@ -10,9 +10,9 @@ Este projeto implementa uma infraestrutura virtual automatizada utilizando ```Te
 # Máquinas Virtuais Criadas 
 
 **dhcp-server**
-  - IP estático:** ```10.0.0.2 ```\
-  - Serviço: ```isc-dhcp-server```\
-  - Distribui IPs de ```10.0.0.10 a 10.0.0.15```\
+  - IP estático:** ```10.0.0.2 ```
+  - Serviço: ```isc-dhcp-server```
+  - Distribui IPs de ```10.0.0.10 a 10.0.0.15```
   - Scripts automatizados para instalação e configuração
 
 **dhcp-client**
